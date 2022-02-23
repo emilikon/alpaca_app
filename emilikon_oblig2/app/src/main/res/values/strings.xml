@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">emilikon_oblig2</string>
+    <string name="partiFarge">FARGE</string>
+    <string name="leader_holder">leader_holder</string>
+    <string name="votes_holder">votes_holder</string>
+    <string name="navn">Navn</string>
+</resources>
