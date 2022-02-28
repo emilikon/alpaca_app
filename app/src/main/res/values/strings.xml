@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">emilikon_oblig2</string>
+    <string name="partiFarge">COLOR PLACEHOLDER</string>
+    <string name="leader_holder">LEADER PLACEHOLDER</string>
+    <string name="votes_holder">VOTES PLACEHOLDER</string>
+    <string name="navn">Navn</string>
+
+    <string-array name="valgdistrikt">
+        <item>Valgdistrikt 1</item>
+        <item>Valgdistrikt 2</item>
+        <item>Valgdistrikt 3</item>
+    </string-array>
+</resources>
