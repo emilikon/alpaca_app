@@ -31,26 +31,23 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
-    private var token: String = ""
-    private val votes: MutableLiveData<ArrayList<AlpacaVote>> by lazy {
-        MutableLiveData<ArrayList<AlpacaVote>>().also {
-            loadVotes(token)
-        }
-    }
-
-    fun getVotes(tokenIn: String): LiveData<ArrayList<AlpacaVote>> {
-        token = tokenIn
-        Log.i("VM: TOKEN", token)
-        return votes
-    }
 
     fun loadVotes(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
             dataSource.fetchVotes(token).also {
-                votes.postValue(it)
+                parties.postValue(it)
+            }
+        }
+    }
+
+
+
+    fun loadVotesXML(tokenXML: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataSource.fetchVotesXML(tokenXML).also {
+                parties.postValue(it)
             }
         }
 
     }
-
 }

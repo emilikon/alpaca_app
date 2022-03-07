@@ -20,7 +20,6 @@ class AlpacaParser {
             parser.nextTag()
             return readFeed(parser)
         }
-
     }
 
     @Throws(XmlPullParserException::class, IOException::class)
@@ -105,7 +104,6 @@ class AlpacaParser {
             }
         }
     }
-
 
 }
 

@@ -27,10 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        var listeParties: MutableList<AlpacaParty> = mutableListOf<AlpacaParty>()
-        var listeVotes: MutableList<AlpacaVote> = mutableListOf<AlpacaVote>()
 
-        startRecyclerView(listeParties)
+        startRecyclerView()
 
 
         val spinner: Spinner = binding.spinner
@@ -55,9 +53,9 @@ class MainActivity : AppCompatActivity() {
                 val fraBruker = resources.getStringArray(R.array.valgdistrikt)[position]
                 Log.i("VALGDISTRIKT: ", fraBruker)
                 when (fraBruker.toString()) {
-                    "Valgdistrikt 1" -> getVotesFromJson(listeParties, "district1.json")
-                    "Valgdistrikt 2" -> getVotesFromJson(listeParties, "district2.json")
-                    "Valgdistrikt 3" -> parseXML(listeParties)
+                    "Valgdistrikt 1" -> viewModel.loadVotes("district1.json")
+                    "Valgdistrikt 2" -> viewModel.loadVotes("district2.json")
+                    "Valgdistrikt 3" -> viewModel.loadVotesXML("district3.xml")
                     else -> {
                         Log.i("ELSE", fraBruker)
                     }
@@ -67,12 +65,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun startRecyclerView(alpacaParties: MutableList<AlpacaParty>) {
+    private fun startRecyclerView() {
         viewModel.getParties().observe(this) { parties ->
             val partiesListFromJson = parties.toMutableList()
-            for (party in partiesListFromJson) {
-                alpacaParties.add(party)
-            }
+
 
             binding.recyclerViewMain.apply {
                 layoutManager = LinearLayoutManager(applicationContext)
@@ -81,61 +77,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getVotesFromJson(alpacaParties: MutableList<AlpacaParty>, token: String) {
-        viewModel.getVotes(token).observe(this) { votes ->
-
-            val listOfVotes: MutableList<AlpacaVote> = votes.toMutableList()
-
-            Log.i("MA: EXAMPLE ELEMENT IN LISTOFVOTES", listOfVotes[0].toString())
-
-            for (p in alpacaParties) p.votes = 0
-            stemmerTotalt = listOfVotes.size
-            Log.i("MA: STEMMER TOTALT ", stemmerTotalt.toString())
-
-
-            //vil helst gjøre dette i DataSource, men slet sånn med kallene dit så måtte det legge det her for å kunne teste
-            for (vote in listOfVotes) {
-                for (party in alpacaParties) {
-                    if (vote.id.equals(party.id)) {
-                        party.votes = party.votes?.plus(1)
-                        val oppslutning = (party.votes?.div(stemmerTotalt))?.times(100)
-                        party.oppslutning = "Votes: " + party.votes + " - $oppslutning%"
-                    }
-
-                    }
-                }
-
-            binding.recyclerViewMain.apply {
-                layoutManager = LinearLayoutManager(applicationContext)
-                adapter = PartyAdapter(alpacaParties)
-            }
-            }
-        }
 
 
 
-    fun parseXML(listeParties : MutableList<AlpacaParty>) {
-        val baseUrl =
-            "https://www.uio.no/studier/emner/matnat/ifi/IN2000/v22/obligatoriske-oppgaver/district3.xml"
-
-        fun getData(): String {
-            val requestUrl = "$baseUrl"
-            return khttp.get(requestUrl).text
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = getData()
-            Log.d(response, response)
-
-            val inputStream: InputStream = response.byteInputStream()
-            val listOfVotes = AlpacaParser().parse(inputStream)
-
-            for (vote in listOfVotes) {
-                for (party in listeParties)
-                    if (party.id.equals(vote.id)) vote.votes?.let { party.votes?.plus(it.toInt()) }
-            }
-        }
     }
-    }
+
+
+
 
 

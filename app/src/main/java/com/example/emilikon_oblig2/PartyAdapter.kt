@@ -25,7 +25,8 @@ class PartyAdapter(val liste: MutableList<AlpacaParty>) :
             binding.partiFarge.setBackgroundColor(Color.parseColor(party.color))
             binding.leader.text = party.leader ?: "Fant ikke leder"
             binding.name.text = party.name ?: "Fant ikke navn"
-            binding.votes.text = party.oppslutning ?: "Fant ikke oppslutning"
+
+            binding.votes.text = (party.votes ?: "Fant ikke oppslutning").toString()
 
             val imageView = binding.img
             Glide.with(imageView.context).load(party.img).into(imageView)
